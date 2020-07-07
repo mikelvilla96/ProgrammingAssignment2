@@ -1,13 +1,30 @@
-Version: 1.0
+##Create a matrix that can cache its inverse
 
-RestoreWorkspace: Default
-SaveWorkspace: Default
-AlwaysSaveHistory: Default
+makeCacheMatrix <- function(x = matrix()) {
+   i <- NULL
+   set <- function(y){
+      x <<- y
+      i <<- NULL
+   }
+   get <- function(){x}
+   setInverse <- function(inverse) {i <<- inverse}
+   getInverse <- function() {i} 
+   list(set = set, 
+        get = get, 
+        setInverse = setInverse, 
+        getInverse = getInverse)
+}
 
-EnableCodeIndexing: Yes
-UseSpacesForTab: Yes
-NumSpacesForTab: 2
-Encoding: UTF-8
+##Computes the inverse created by the other function
 
-RnwWeave: Sweave
-LaTeX: pdfLaTeX
+cacheSolve <- function(x, ...) {
+   i <- x$getInverse()
+   if(!is.null(i)){
+      message("getting cached data")
+      return(i)
+   }
+   mat <- x$get()
+   i <- solve(mat,...)
+   x$setInverse(i)
+   i
+}
